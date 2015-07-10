@@ -3,6 +3,7 @@ $(document).ready(function() {
   var solution = 0;
   var solved = 0;
   var operators = [];
+  var timer;
 
   var getOperators = function() {
     var array = [];
@@ -25,7 +26,7 @@ $(document).ready(function() {
       array.push("sqrt");
     }
     operators = array;
-  }
+  };
 
   var getQuestion = function () {
     var rand = $('.form-control').val();
@@ -62,7 +63,7 @@ $(document).ready(function() {
       solution = Math.sqrt(x);
       $('#question').text("sqrt of "+x);
     }
-  }
+  };
 
   $(document).on('focusout','.form-control',function() {
     getQuestion();
@@ -72,40 +73,41 @@ $(document).ready(function() {
     getQuestion();
   });
 
-  $(document).on('focusin','#input-answer',function() {
-    var answer = $('#input-answer').value;
-    var timer = setInterval(function() {
-      $('#countdown').text(secondsLeft+' seconds left');
-      if (secondsLeft > 0) {
-        answer = $('#input-answer').val();
-        if(answer == solution) {
+  $(document).on('keyup','#input-answer',function() {
+    var answer = $('#input-answer').val();
+    if(answer == solution) {
+      timer = setInterval(function() {
+        $('#countdown').text(secondsLeft+' seconds left');
+        if (secondsLeft > 0) {
+          answer = $('#input-answer').val();
+          if(answer == solution) {
           correct();
           getQuestion();
           solved ++;
           secondsLeft ++;
           $('#input-answer').val('');
+          }
+          secondsLeft --;
         }
-        secondsLeft --;
-      }
-      else {
+        else {
         $('#question').text('Game over! you got '+solved+' correct!')
         clearInterval(timer);
-      }
-    },900);;
+        }
+      },1000);
+    }
   });
 
   var correct = function() {
-    $('#bitcoin').css('display', 'block');
-    $("#bitcoin").animate({'margin-left': '500px','margin-top': '400px'},100,function() {
+    $("#bitcoin").show().css({left:'0px',top:'0px'});
+      $("#bitcoin").animate({left: '500px',top: '400px'},300,function() {
       $('#bitcoin').css('display', 'none');
-      $('#bitcoin').css('margin-top', '0px');
-      $('#bitcoin').css('margin-left', '0px');
     });
-  }
+  };
 
   $(document).on('click','#reset',function() {
+    clearInterval(timer);
     getQuestion();
-    solved =0;
+    solved = 0;
     secondsLeft = 10;
     $('#input-answer').val('');
     $('#countdown').text(secondsLeft+' seconds left');

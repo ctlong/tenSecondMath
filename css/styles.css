@@ -11,6 +11,8 @@ body {
 
 #bitcoin {
 	display: none;
+	float: left;
+	position: absolute;
 	width: 100px;
 ;
 }
